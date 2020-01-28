@@ -1,2 +1,4 @@
 # IBF_TriggerModel_Flood
-510 repository for Flood trigger models in different countries
+Latest version of Trigger Model methodology for flood using Global datasets
+
+
