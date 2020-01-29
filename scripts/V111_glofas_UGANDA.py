@@ -160,7 +160,7 @@ flood_events.index=flood_events['Date']
 flood_events = flood_events[['Area', 'flood']].rename(columns={'Area': 'district'})
 
 # (2)- open the impacted_area and Glofas related stations per district files
-df_dg=pd.read_csv(path + 'input/AFFECTED_DIST_with_glofas_ABU.csv', encoding='latin-1')  
+df_dg=pd.read_csv(path + 'input/Affected_area_stations.csv', encoding='latin-1')  
 df_dg_long = df_dg[['name', 'Glofas_st', 'Glofas_st2', 'Glofas_st3', 'Glofas_st4']].melt(id_vars='name', var_name='glofas_n', value_name='station').drop('glofas_n', 1).dropna()
 df_dg_long = df_dg_long.rename(columns = {'name': 'district'})
 df_dg=df_dg.set_index('name')
