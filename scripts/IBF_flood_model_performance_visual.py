@@ -23,6 +23,7 @@ import rasterio
 from rasterstats import zonal_stats
 import fiona
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from settings import my_local_path
 
 #%% Cell to change per country
     
@@ -30,7 +31,7 @@ country = 'Uganda'
 ct_code='uga'
 
 #Path name to the folder uganda
-path= 'C:/CODE_510/V111_glofas/%s/' %country
+path = my_local_path + '/' + country + '/'
 
 # Read the path to the relevant admin level shape to use for the study
 Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
