@@ -25,7 +25,6 @@ register_matplotlib_converters()
 import datetime
 from sklearn.metrics import confusion_matrix
 import datetime as dt   # Python standard library datetime  module
-from settings import my_local_path
 
 #%% functions definition 
 #Creating a fonction to normalize result
@@ -87,6 +86,7 @@ ct_code='uga'
 
 #Path name to the folder uganda
 path = my_local_path + '/' + country + '/'
+#path= 'C:/CODE_510/V111_glofas/%s/' %country
 
 # Read the path to the relevant admin level shape to use for the study
 Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
@@ -157,11 +157,14 @@ df_discharge.to_csv(path + 'input/Glofas/station_csv/GLOFAS_fill_allstation.csv'
 # (1) - Open the flood impact data .csv file and create a dataframe
 flood_events=pd.read_csv(path + 'input/%s_impact_data.csv' %ct_code, encoding='latin-1')  
 flood_events['Date']= pd.to_datetime(flood_events['Date'], format='%m/%d/%Y')                 # transforming date from string to datetime                                                        # create a list of event dates
+flood_events= flood_events.drop_duplicates() 
 flood_events.index=flood_events['Date']
-flood_events = flood_events[['Area', 'flood']].rename(columns={'Area': 'district'})
+flood_events = flood_events[['Area', 'flood']].rename(columns={'Area': 'district'}).dropna() 
+#flood_events['district']= flood_events['district'].str.lower() 
 
 # (2)- open the impacted_area and Glofas related stations per district files
 df_dg=pd.read_csv(path + 'input/%s_affected_area_stations.csv' %ct_code, encoding='latin-1')  
+#df_dg['name']= df_dg['name'].str.lower() 
 df_dg_long = df_dg[['name', 'Glofas_st', 'Glofas_st2', 'Glofas_st3', 'Glofas_st4']].melt(id_vars='name', var_name='glofas_n', value_name='station').drop('glofas_n', 1).dropna()
 df_dg_long = df_dg_long.rename(columns = {'name': 'district'})
 df_dg=df_dg.set_index('name')
@@ -243,7 +246,7 @@ df_model['Q50_pred']=np.where((df_model['max_dt_3days'] >= df_model['Q50']), 1, 
 df_model['Q80_pred']=np.where((df_model['max_dt_3days'] >= df_model['Q80']), 1, 0)
 df_model['Q90_pred']=np.where((df_model['max_dt_3days'] >= df_model['Q90']), 1, 0)
 
-df_model.to_csv(path + 'output/Glofas_Analysis/uga_glofas_matrix.csv', index=False)
+df_model.to_csv(path + 'output/Glofas_Analysis/%s_glofas_matrix.csv' %ct_code, index=False)
 #df_model.query('Q98_pred == 1')    #Tool to do a query in the df_model
 
 
@@ -262,7 +265,7 @@ performance_scores = pd.merge(floods_per_district, performance_scores, how='left
 performance_scores = performance_scores.rename(columns={ 'flood': 'nb_event'})
 performance_scores = performance_scores[['district','station','nb_event','quantile', 'pod','far','pofd','csi']]
 
-performance_scores.to_csv(path+ 'output/Performance_scores/uga_glofas_performance_score.csv', index=False)
+performance_scores.to_csv(path+ 'output/Performance_scores/%s_glofas_performance_score.csv' %ct_code, index=False)
 
 
 
