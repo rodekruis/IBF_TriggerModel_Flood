@@ -13,11 +13,14 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 import os
+#from os import listdir
+#from os.path import isfile, join
 import geopandas as gpd
 from shapely.geometry import Point
 from osgeo import ogr
 import xshape
 import rasterio
+from rasterstats import zonal_stats
 import fiona
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -66,10 +69,10 @@ cax = divider.append_axes("right", size="5%", pad=0.2)
 
 merged_perf.plot(ax=ax, color='lightgrey', edgecolor='grey')
 ax.set_title('Number of recorded flood event per district', fontsize= 14)
-cmap = cm.get_cmap('jet', 60)
+cmap = cm.get_cmap('jet', 20)    # adapt the number if needed
 
 perfdrop= merged_perf.dropna(subset=['nb_event'])
-perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=60, cmap=cmap, cax=cax)
+perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=20, cmap=cmap, cax=cax)    # adapt the vmax number if needed
 
 fig.savefig(path+'output/Performance_scores/Nb_event_district.png')
 
@@ -81,7 +84,7 @@ for quantile in quantiles:
     perf_quantile= merged_perf[merged_perf['quantile']== quantile]
     
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16,16))
-    fig.suptitle('Performance results of model v1.1.1 in Uganda (%s Glofas)'%quantile,fontsize= 22,fontweight= 'bold', x=0.5, y=0.94)   
+    fig.suptitle('Performance results of model v1.1.1 in %s (%s Glofas)' %(country, quantile),fontsize= 22,fontweight= 'bold', x=0.5, y=0.94)   
     divider_ax1 = make_axes_locatable(ax1)
     divider_ax2 = make_axes_locatable(ax2)
     divider_ax3 = make_axes_locatable(ax3)
