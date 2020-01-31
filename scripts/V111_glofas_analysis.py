@@ -224,7 +224,8 @@ impact_floods = flood_events.reset_index().rename(columns={'Date': 'time'})
 df_model = pd.merge(df_discharge, df_dg_long, how='left', on='station').dropna()
 df_model = pd.merge(df_model, impact_floods , how='left', on=['time', 'district'])
 df_model = pd.merge(df_model, Gl_stations[['station','Q50', 'Q80','Q90']] , how='left', on='station')#.set_index('time')
-df_model = df_model[df_model['time']> impact_floods.time.min()]    #filtering the df to date after the first observed event
+df_model = df_model[df_model['time']> (impact_floods.time.min() - dt.timedelta(days=7))]    #filtering the df to date after the first observed event
+df_model = df_model[df_model['time']< (impact_floods.time.max() + dt.timedelta(days=7))]    #filtering the df to date before the last observed event
 
 df_model['flood'] = df_model['flood'].fillna(0)
 
