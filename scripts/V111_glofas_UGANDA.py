@@ -7,7 +7,6 @@ Created on Sun Oct 20 20:24:03 2019
 # this script objective is to extract and analyse Glofas historical data for specific stations, against flood impact events at district level
 # and to compute the prediction performance of a model using only Glofas discharge thresholds.
 
-
 #%%
 # setting up your environment
 
@@ -28,8 +27,8 @@ from sklearn.metrics import confusion_matrix
 import datetime as dt   # Python standard library datetime  module
 
 #%% functions definition 
-#Creating a fonction to normalize result
 
+#Creating a fonction to normalize result
 def normalize(df):
     result = df.copy()
     for feature_name in df.columns:
@@ -38,49 +37,32 @@ def normalize(df):
         result[feature_name] = (df[feature_name] - min_value) / (max_value - min_value)
     return result
 
-# compute confusion matrix and performance index functions (correct negatives and false alarm are adapted in this method from the daily comfusion matrix)
-#False alarm : first compute the number of glofas triggering events (consecutive day above discharge threshold as an event), then the false alarm are the total trigger number minus the hits
-#correct negative : forcing the correct negative number to be the same than the number of observed flood events
-
-def calc_pod(obs, pred):
-    corr_neg, false_al, misses, hits = confusion_matrix(obs, pred).ravel()  
-    false_al = ( pred.loc[pred.shift() != pred].sum()) - hits   
-    corr_neg = misses + hits                                    
-    POD = hits / (hits + misses)
-    return POD
-
-def calc_far(obs, pred):
-    corr_neg, false_al, misses, hits = confusion_matrix(obs, pred).ravel()  
-    false_al = ( pred.loc[pred.shift() != pred].sum()) - hits   
-    corr_neg = misses + hits                                    
-    FAR = false_al / (hits + false_al)
-    return FAR
-    
-def calc_pofd(obs, pred):
-    corr_neg, false_al, misses, hits = confusion_matrix(obs, pred).ravel() 
-    false_al = ( pred.loc[pred.shift() != pred].sum()) - hits    
-    corr_neg = misses + hits 
-    POFD = false_al / (false_al + corr_neg)
-    return POFD
-
-def calc_csi(obs, pred):
-    corr_neg, false_al, misses, hits = confusion_matrix(obs, pred).ravel()  
-    false_al = ( pred.loc[pred.shift() != pred].sum()) - hits    
-    corr_neg = misses + hits 
-    CSI = hits / (hits + false_al + misses)
-    return CSI
+# Fonction to compute confusion matrix (hits, false_al, misses, correct negatives) and performance indexes (FAR, POD, POFD, CSI)):
+# Methodology adapted taking into account the consecutive day above thresholds as a unique flood period
+# hits:              nb of peak period above thresholds that have at least one observation day within the period
+# false alarm :      number of peak above threshold(consecutive day above discharge threshold as an event), minus the number of hits
+# misses :           number of observed flood events no in a discharge peak period o above threshold
+# correct negative : forcing the correct negative number to be the same than the number of observed flood events (misses + hits)
 
 def calc_performance_scores(obs, pred):
+    
+    df= pd.DataFrame({'cons_class': pred.diff().ne(0).cumsum(), 'hits':(obs==1) & (pred ==1)})
+    hits= df[['cons_class','hits' ]].drop_duplicates().hits[df.hits == True].count()
+    false_al = (pred.loc[pred.shift() != pred].sum()) - hits 
+    misses = sum((obs==1) & (pred ==0))
+    corr_neg = misses + hits
+    
     output = {}
-    output['pod'] = calc_pod(obs, pred)
-    output['far'] = calc_far(obs, pred)
-    output['pofd'] = calc_pofd(obs, pred)
-    output['csi'] = calc_csi(obs, pred)
+    output['pod'] = hits / (hits + misses)
+    output['far'] = false_al / (hits + false_al)
+    output['pofd'] = false_al / (false_al + corr_neg)
+    output['csi'] = hits / (hits + false_al + misses)
     
     output = pd.Series(output)
     return output
      
 #%% Cell to change per country
+# don't forget to run your setting with lik to my_local_path
     
 country = 'Uganda'  
 ct_code='uga'
@@ -211,7 +193,7 @@ for districts in Affected_admin: # for each district of Uganda
 # manual QC of specific station and date : change date and station below
 
 startYear, startMonth,startDay = (2007,5,23)
-endYear, endMonth,endDay = (2008,4,10)
+endYear, endMonth,endDay = (2019,4,10)
 
 startDate = dt.datetime(year=startYear, month=startMonth, day=startDay)
 endDate = dt.datetime(year=endYear, month=endMonth, day=endDay)

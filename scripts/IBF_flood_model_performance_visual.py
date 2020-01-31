@@ -13,17 +13,13 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
 import os
-#from os import listdir
-#from os.path import isfile, join
 import geopandas as gpd
 from shapely.geometry import Point
 from osgeo import ogr
 import xshape
 import rasterio
-from rasterstats import zonal_stats
 import fiona
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from settings import my_local_path
 
 #%% Cell to change per country
     
@@ -31,13 +27,20 @@ country = 'Uganda'
 ct_code='uga'
 
 #Path name to the folder uganda
-path = my_local_path + '/' + country + '/'
+path= 'C:/CODE_510/V111_glofas/%s/' %country
 
 # Read the path to the relevant admin level shape to use for the study
-Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
+
+#for Uganda activate the following lines :
+Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'   # for Uganda
+Admin_col = 'ADM1_EN'  # column name of the Admin name in the shapefile of Uganda
+
+#for Kenya activate the following lines :
+#Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # for Kenya
+#Admin_col = 'name'  # column name of the Admin name in the shapefile for Kenya
 
 # sources of the model perforfance results from the previous script V111_glofas
-model_performance = path + 'output/Performance_scores/uga_glofas_performance_score.csv'
+model_performance = path + 'output/Performance_scores/%s_glofas_performance_score.csv' %ct_code
 
 #%% 
 # Open the district admin 1 sapefile
@@ -50,10 +53,10 @@ best= model_perf.groupby(['district', 'quantile'])['far'].transform(min)==model_
 model_perf_best= model_perf[best]
 
 # lower case the district column in both file and merge
-district['ADM1_EN' ]= district['ADM1_EN'].str.lower()
+district[Admin_col]= district[Admin_col].str.lower()
 model_perf_best['district']= model_perf_best['district'].str.lower()
 
-merged_perf= district.set_index('ADM1_EN').join(model_perf_best.set_index('district')) 
+merged_perf= district.set_index(Admin_col).join(model_perf_best.set_index('district')) 
 merged_perf.to_file(path + 'output/Performance_scores/perf_%s_v111.shp' %ct_code)
 
 #%%  create a figure with the number of flood event recorded per district
@@ -63,10 +66,10 @@ cax = divider.append_axes("right", size="5%", pad=0.2)
 
 merged_perf.plot(ax=ax, color='lightgrey', edgecolor='grey')
 ax.set_title('Number of recorded flood event per district', fontsize= 14)
-cmap = cm.get_cmap('jet', 10)
+cmap = cm.get_cmap('jet', 60)
 
 perfdrop= merged_perf.dropna(subset=['nb_event'])
-perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=10, cmap=cmap, cax=cax)
+perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=60, cmap=cmap, cax=cax)
 
 fig.savefig(path+'output/Performance_scores/Nb_event_district.png')
 
@@ -105,7 +108,7 @@ for quantile in quantiles:
     perf_quantile.plot(ax=ax4,column='pod', legend= True, cmap='coolwarm_r', cax=cax4)
     
 
-    fig.savefig(path + 'output/Performance_scores/Uganda_v111_%s.png' %quantile)
+    fig.savefig(path + 'output/Performance_scores/%s_v111_%s.png' % (country, quantile))
 
 
 
