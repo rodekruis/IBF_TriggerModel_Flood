@@ -67,13 +67,11 @@ def calc_performance_scores(obs, pred):
 country = 'Uganda'  
 ct_code='uga'
 
-#Path name to the folder uganda
+#Path name to the folder and local path
 path = my_local_path + '/' + country + '/'
-#path= 'C:/CODE_510/V111_glofas/%s/' %country
 
 # Read the path to the relevant admin level shape to use for the study
 Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
-
 
 #%% GlLOFAS DATA EXTRACTION AND ANALYSIS
 
