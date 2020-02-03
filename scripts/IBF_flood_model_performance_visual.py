@@ -21,7 +21,6 @@ ct_code='ken'
 
 #Path name to the folder : 
 path = my_local_path + '/' + country + '/'
-#path= 'C:/CODE_510/V111_glofas/%s/' %country
 
 # Read the path to the relevant admin level shape to use for the study
 
