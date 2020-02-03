@@ -491,7 +491,7 @@ G4811,Synthetic,0,NA,NA,Na,Na,Na,TD,Chad,Africa,43,-9999,25169,0,0,17.45,19.45,0
 G4812,Synthetic,0,NA,NA,Na,Na,Na,SD,Sudan,Africa,43,-9999,25369,0,0,17.45,29.05,0,0, , ,,, ,0,0,,0,AF_20190502
 G4813,Synthetic,0,NA,NA,Na,Na,Na,SD,Sudan,Africa,43,-9999,13917,0,0,17.45,34.55,0,0, , ,,, ,0,0,,0,AF_20190502
 G4816,Synthetic,0,NA,NA,Na,Na,Na,ML,Mali,Africa,44,-9999,28535,0,0,17.35,4.15,0,0, , ,,, ,0,0,,0,AF_20190502
-G4817,Synthetic,0,NA,NA,Na,Na,Na,NE,Niger,Africa,44,-9999,348277,0,0,17.35,4.25,0,0, , ,,, ,0,0,,0,AF_20190502
+G4817,Synthetic,0,NA,NA,Na,Na,Na,ML,Mali,Africa,44,-9999,348277,0,0,17.35,4.25,0,0, , ,,, ,0,0,,0,AF_20190502
 G4818,Synthetic,0,NA,NA,Na,Na,Na,SD,Sudan,Africa,43,-9999,19646,0,0,17.35,29.15,0,0, , ,,, ,0,0,,0,AF_20190502
 G4819,Synthetic,0,NA,NA,Na,Na,Na,SD,Sudan,Africa,43,-9999,2019320,0,0,17.35,33.75,0,0, , ,,, ,0,0,,0,AF_20190502
 G4820,Synthetic,0,NA,NA,Na,Na,Na,SD,Sudan,Africa,43,-9999,32507,0,0,17.35,33.95,0,0, , ,,, ,0,0,,0,AF_20190502
@@ -1140,3 +1140,16 @@ F0039,NLRC_510,0,NA,NA,R.Mayanja,,,UG,Uganda,Africa,,,,,,0.649999976,32.15000153
 F0041,NLRC_510,0,NA,NA,R.Nkusi,,,UG,Uganda,Africa,,,,,,1.149999976,30.95000076,,,,,,,,,,,,
 F0042,NLRC_510,0,NA,NA,R.PageratKitgum,,,UG,Uganda,Africa,,,,,,3.150000095,33.75,,,,,,,,,,,,
 F0031,NLRC_510,0,NA,NA,R.Sio,,,KE,Kenya,Africa,,,,,,0.150000006,34.04999924,,,,,,,,,,,,
+F0001,NLRC_511,0,NA,NA,Guelelinkoro,,,ML,Mali,Africa,,,,,,11.14999962,-8.550000191,,,,,,,,,,,,
+F0002,NLRC_512,0,NA,NA,Banankoro,,,ML,Mali,Africa,,,,,,11.64999962,-8.649999619,,,,,,,,,,,,
+F0003,NLRC_513,0,NA,NA,Bamako,,,ML,Mali,Africa,,,,,,12.55000019,-8.050000191,,,,,,,,,,,,
+F0004,NLRC_514,0,NA,NA,Koulikoro,,,ML,Mali,Africa,,,,,,12.85000038,-7.550000191,,,,,,,,,,,,
+F0005,NLRC_515,0,NA,NA,Mopti,,,ML,Mali,Africa,,,,,,14.55000019,-4.150000095,,,,,,,,,,,,
+F0006,NLRC_516,0,NA,NA,Dire,,,ML,Mali,Africa,,,,,,16.25,-3.349999905,,,,,,,,,,,,
+F0007,NLRC_517,0,NA,NA,Gao,,,ML,Mali,Africa,,,,,,16.25,-0.050000001,,,,,,,,,,,,
+F0008,NLRC_518,0,NA,NA,Sofara,,,ML,Mali,Africa,,,,,,14.05000019,-4.25,,,,,,,,,,,,
+F0009,NLRC_519,0,NA,NA,Douna,,,ML,Mali,Africa,,,,,,13.14999962,-5.949999809,,,,,,,,,,,,
+F0010,NLRC_520,0,NA,NA,Bougouni,,,ML,Mali,Africa,,,,,,11.35000038,-7.449999809,,,,,,,,,,,,
+F0011,NLRC_521,0,NA,NA,Pankourou,,,ML,Mali,Africa,,,,,,11.44999981,-6.550000191,,,,,,,,,,,,
+F0012,NLRC_522,0,NA,NA,Kayes,,,ML,Mali,Africa,,,,,,14.35000038,-11.35000038,,,,,,,,,,,,
+F0013,NLRC_523,0,NA,NA,BafingMakana,,,ML,Mali,Africa,,,,,,12.44999981,-10.35000038,,,,,,,,,,,,
