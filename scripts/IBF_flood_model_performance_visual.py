@@ -32,6 +32,10 @@ path = my_local_path + '/' + country + '/'
 Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # for Kenya
 Admin_col = 'name'  # column name of the Admin name in the shapefile for Kenya
 
+#for Mali activate the following lines :
+#Admin= path + 'input/Admin/mli_admbnda_adm2_1m_dnct_20190802.shp' # for Mali
+#Admin_col = 'ADM2_FR'  # column name of the Admin name in the shapefile for Mali
+
 # sources of the model perforfance results from the previous script V111_glofas
 model_performance = path + 'output/Performance_scores/%s_glofas_performance_score.csv' %ct_code
 

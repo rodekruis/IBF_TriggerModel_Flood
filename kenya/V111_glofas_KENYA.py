@@ -69,11 +69,9 @@ ct_code='ken'
 
 #Path name to the folder of reference
 path = my_local_path + '/' + country + '/'
-#path= 'C:/CODE_510/V111_glofas/%s/' %country
 
 # Read the path to the relevant admin level shape to use for the study
 Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp'
-
 
 #%% GlLOFAS DATA EXTRACTION AND ANALYSIS
 
