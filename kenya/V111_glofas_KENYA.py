@@ -171,6 +171,7 @@ for districts in Affected_admin: # for each district
     for j in range(0,len(st)) :  # for each related Glofas station associated to the district
         print(st[j])
         df_dis['time']= di[st[j]]['time'].values
+        df_dis[st[j]]= pd.Series(di[st[j]].values.flatten()) 
   
         dff=normalize(df_dis.drop('time',axis=1))
         dff['time']=df_dis['time']

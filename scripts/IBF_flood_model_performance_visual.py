@@ -6,22 +6,12 @@ Created on Sat Jan 18 11:12:23 2020
 """
 #%%
 # setting up your environment
-#import xarray as xr
+
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import numpy as np
-import os
-#from os import listdir
-#from os.path import isfile, join
 import geopandas as gpd
-from shapely.geometry import Point
-from osgeo import ogr
-import xshape
-import rasterio
-from rasterstats import zonal_stats
-import fiona
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 #%% Cell to change per country
@@ -29,8 +19,9 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 country = 'Kenya'  
 ct_code='ken'
 
-#Path name to the folder uganda
-path= 'C:/CODE_510/V111_glofas/%s/' %country
+#Path name to the folder : 
+path = my_local_path + '/' + country + '/'
+#path= 'C:/CODE_510/V111_glofas/%s/' %country
 
 # Read the path to the relevant admin level shape to use for the study
 
