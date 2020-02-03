@@ -82,7 +82,7 @@ Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp'
 # Compute the extreme annual discharge per station and the threshold quantiles
 
 # Read the path to the Africa .csv file of all glofas virtual stations list of Africa, and select only the one for the country/ save the table as .csv
-Gl_stations = pd.read_csv( 'C:/CODE_510/V111_glofas/africa/glofas/Glofaspoints_Africa_510.csv')  # do not change
+Gl_stations = pd.read_csv( my_local_path + '/africa/glofas/Glofaspoints_Africa_510.csv')  # do not change
 Gl_stations = Gl_stations [Gl_stations['CountryNam']== country]
 Gl_stations['station']= Gl_stations['ID']
 Gl_stations =Gl_stations[['ID','station', 'Stationnam', 'CountryNam','XCorrected','YCorrected']].set_index('ID').rename(columns={'Stationnam': 'location', 'CountryNam': 'Country','XCorrected': 'lon', 'YCorrected': 'lat'})  
@@ -159,7 +159,7 @@ df_dg=df_dg.set_index('name')
 
 Affected_admin=np.unique(flood_events['district'].values)  
 
-for districts in Affected_admin: # for each district of Uganda
+for districts in Affected_admin: # for each district 
     print('############')
     print(districts)
     fe_district=flood_events[flood_events['district']==districts]
