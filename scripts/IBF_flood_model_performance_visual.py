@@ -16,8 +16,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 #%% Cell to change per country
     
-country = 'Kenya'  
-ct_code='ken'
+country = 'Mali'  
+ct_code='mli'
 
 #Path name to the folder : 
 path = my_local_path + '/' + country + '/'
@@ -29,12 +29,12 @@ path = my_local_path + '/' + country + '/'
 #Admin_col = 'ADM1_EN'  # column name of the Admin name in the shapefile of Uganda
 
 #for Kenya activate the following lines :
-Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # for Kenya
-Admin_col = 'name'  # column name of the Admin name in the shapefile for Kenya
+#Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # for Kenya
+#Admin_col = 'name'  # column name of the Admin name in the shapefile for Kenya
 
 #for Mali activate the following lines :
-#Admin= path + 'input/Admin/mli_admbnda_adm2_1m_dnct_20190802.shp' # for Mali
-#Admin_col = 'ADM2_FR'  # column name of the Admin name in the shapefile for Mali
+Admin= path + 'input/Admin/mli_admbnda_adm2_1m_dnct_20190802.shp' # for Mali
+Admin_col = 'ADM2_FR'  # column name of the Admin name in the shapefile for Mali
 
 # sources of the model perforfance results from the previous script V111_glofas
 model_performance = path + 'output/Performance_scores/%s_glofas_performance_score.csv' %ct_code
@@ -63,10 +63,10 @@ cax = divider.append_axes("right", size="5%", pad=0.2)
 
 merged_perf.plot(ax=ax, color='lightgrey', edgecolor='grey')
 ax.set_title('Number of recorded flood event per district', fontsize= 14)
-cmap = cm.get_cmap('jet', 60)    # adapt the number if needed
+cmap = cm.get_cmap('jet', 20)    # adapt the number if needed
 
 perfdrop= merged_perf.dropna(subset=['nb_event'])
-perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=60, cmap=cmap, cax=cax)    # adapt the vmax number if needed
+perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=20, cmap=cmap, cax=cax)    # adapt the vmax number if needed
 
 fig.savefig(path+'output/Performance_scores/Nb_event_district.png')
 
@@ -76,6 +76,7 @@ quantiles = ['Q50_pred', 'Q80_pred', 'Q90_pred']
 for quantile in quantiles:
     
     perf_quantile= merged_perf[merged_perf['quantile']== quantile]
+    perf_quantile.to_file(path + 'output/Performance_scores/perf_%s_v111_%s.shp' % (ct_code, quantile) )
     
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16,16))
     fig.suptitle('Performance results of model v1.1.1 in %s (%s Glofas)' %(country, quantile),fontsize= 22,fontweight= 'bold', x=0.5, y=0.94)   
