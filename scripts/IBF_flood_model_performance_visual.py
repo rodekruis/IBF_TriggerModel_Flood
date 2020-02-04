@@ -53,7 +53,6 @@ model_perf_best= model_perf[best]
 district[Admin_col]= district[Admin_col].str.replace(u"é", "e").str.lower()
 model_perf_best['district']= model_perf_best['district'].str.lower()
 
-
 merged_perf= district.set_index(Admin_col).join(model_perf_best.set_index('district')) 
 merged_perf.to_file(path + 'output/Performance_scores/perf_%s_v111.shp' %ct_code)
 
