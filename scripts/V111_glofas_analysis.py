@@ -73,7 +73,7 @@ path = my_local_path + '/' + country + '/'
 # Read the path to the relevant admin level shape to use for the study
 Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
 
-#%% GlLOFAS DATA EXTRACTION AND ANALYSIS
+#%% GLOFAS DATA EXTRACTION AND ANALYSIS
 
 # Find the Glofas Stations in the Country 
 #  extract discharge time series for each station from the Glofas Grid data 
@@ -137,11 +137,12 @@ df_discharge.to_csv(path + 'input/Glofas/station_csv/GLOFAS_fill_allstation.csv'
 
 # (1) - Open the flood impact data .csv file and create a dataframe
 #  !!!! Change the date format and the name of the Admin column in the script depending on the input of the country impact data .csv!! 
-Date_format = '%m/%d/%Y'
+Date_format = '%d/%m/%Y'
 Admin_column = 'Area'                      
 
 flood_events=pd.read_csv(path + 'input/%s_impact_data.csv' %ct_code, encoding='latin-1')  
-flood_events['Date']= pd.to_datetime(flood_events['Date'], format=Date_format)                                                               
+flood_events['Date']= pd.to_datetime(flood_events['Date'], format=Date_format)    
+flood_events= flood_events.query("Date >= '2000-01-01' ")                                                            
 flood_events = flood_events[['Date', Admin_column, 'flood']].drop_duplicates().rename(columns={Admin_column: 'district'}).dropna().set_index('Date')  
 flood_events['district']= flood_events['district'].str.lower() 
 
