@@ -44,8 +44,9 @@ model_performance = path + 'output/Performance_scores/%s_glofas_performance_scor
 district= gpd.read_file(Admin)
 #open the csv file with performance results of the model
 model_perf =pd.read_csv(model_performance)
-
+model_perf =model_perf.dropna()
 # find the best station to use per district based on the lowest FAR values
+ 
 best= model_perf.groupby(['district', 'quantile'])['far'].transform(min)==model_perf['far']
 model_perf_best= model_perf[best]
 
