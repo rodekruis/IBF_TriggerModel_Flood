@@ -194,14 +194,14 @@ for districts in Affected_admin: # for each district of Uganda
 #%% PLOTS to ZOOM TO SPECIFIC STATION AND TIMEFRAME
 # manual QC of specific station and date : change date and station below
 
-startYear, startMonth,startDay = (2002,5,1)
-endYear, endMonth,endDay = (2017,11,15)
+startYear, startMonth,startDay = (2008,5,1)
+endYear, endMonth,endDay = (2014,11,15)
 
 startDate = dt.datetime(year=startYear, month=startMonth, day=startDay)
 endDate = dt.datetime(year=endYear, month=endMonth, day=endDay)
 
-station = 'F0032'   #to change
-districts = 'tororo'
+station = 'UG_GVS4'   #to change
+districts = 'lira'
 
 fe_district=flood_events[flood_events['district']==districts].reset_index()
 dis_sel= di[station].sel(time=slice(startDate,endDate)) 
