@@ -69,10 +69,10 @@ cax = divider.append_axes("right", size="5%", pad=0.2)
 
 merged_perf.plot(ax=ax, color='lightgrey', edgecolor='grey')
 ax.set_title('Number of recorded flood event per district', fontsize= 14)
-cmap = cm.get_cmap('jet', 40)    # adapt the number if needed
+cmap = cm.get_cmap('jet', 50)    # adapt the number if needed
 
 perfdrop= merged_perf.dropna(subset=['nb_event'])
-perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=40, cmap=cmap, cax=cax)    # adapt the vmax number if needed
+perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=50, cmap=cmap, cax=cax)    # adapt the vmax number if needed
 
 fig.savefig(path+'output/Performance_scores/Nb_event_district.png')
 
