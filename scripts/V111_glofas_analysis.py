@@ -194,14 +194,14 @@ for districts in Affected_admin: # for each district of Uganda
 #%% PLOTS to ZOOM TO SPECIFIC STATION AND TIMEFRAME
 # manual QC of specific station and date : change date and station below
 
-startYear, startMonth,startDay = (2007,5,23)
-endYear, endMonth,endDay = (2019,4,10)
+startYear, startMonth,startDay = (2002,5,1)
+endYear, endMonth,endDay = (2017,11,15)
 
 startDate = dt.datetime(year=startYear, month=startMonth, day=startDay)
 endDate = dt.datetime(year=endYear, month=endMonth, day=endDay)
 
-station = 'G5196'   #to change
-districts = 'Katakwi'
+station = 'F0032'   #to change
+districts = 'tororo'
 
 fe_district=flood_events[flood_events['district']==districts].reset_index()
 dis_sel= di[station].sel(time=slice(startDate,endDate)) 
@@ -215,6 +215,7 @@ for impacts_date in fe_district['Date']:
     if startDate <= impacts_date <= endDate :
         plt.axvline(x=impacts_date, color='y', linestyle='--')
 
+plt.title('District : %s / Station : %s' % (districts, station))
   
 #%%  Joining together tables and extracting discharge data to create a prediction model table (df_model)
 
