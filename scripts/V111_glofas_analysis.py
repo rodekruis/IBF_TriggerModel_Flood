@@ -25,6 +25,8 @@ register_matplotlib_converters()
 import datetime
 from sklearn.metrics import confusion_matrix
 import datetime as dt   # Python standard library datetime  module
+from database_utils import get_glofas_data # utility functions to access database
+from pathlib import Path
 
 #%% functions definition 
 
@@ -45,11 +47,10 @@ def normalize(df):
 # correct negative : forcing the correct negative number to be the same than the number of observed flood events (misses + hits)
 
 def calc_performance_scores(obs, pred):
-    
     df= pd.DataFrame({'cons_class': pred.diff().ne(0).cumsum(), 'hits':(obs==1) & (pred ==1)})
     hits= df[['cons_class','hits' ]].drop_duplicates().hits[df.hits == True].count()
     false_al = (pred.loc[pred.shift() != pred].sum()) - hits 
-    misses = sum((obs==1) & (pred ==0))
+    misses = sum((obs == 1) & (pred ==0))
     corr_neg = misses + hits
     
     output = {}
@@ -60,18 +61,18 @@ def calc_performance_scores(obs, pred):
     
     output = pd.Series(output)
     return output
-     
-#%% Cell to change per country
-# don't forget to run your setting with lik to my_local_path
-    
-country = 'Uganda'  
-ct_code='uga'
 
-#Path name to the folder and local path
+
+# Change per country
+country = 'Uganda'  
+ct_code = 'uga'
+
+# Path name to the folder and local path
+my_local_path = str(Path(os.getcwd()).parent)
 path = my_local_path + '/' + country + '/'
 
 # Read the path to the relevant admin level shape to use for the study
-Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
+Admin = path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
 
 #%% GLOFAS DATA EXTRACTION AND ANALYSIS
 
@@ -80,22 +81,31 @@ Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
 # Compute the extreme annual discharge per station and the threshold quantiles
 
 # Read the path to the Africa .csv file of all glofas virtual stations list of Africa, and select only the one for the country/ save the table as .csv
-Gl_stations = pd.read_csv( my_local_path + '/africa/glofas/Glofaspoints_Africa_510.csv')  # do not change
-Gl_stations = Gl_stations [Gl_stations['CountryNam']== country]
-Gl_stations['station']= Gl_stations['ID']
-Gl_stations =Gl_stations[['ID','station', 'Stationnam', 'CountryNam','XCorrected','YCorrected']].set_index('ID').rename(columns={'Stationnam': 'location', 'CountryNam': 'Country','XCorrected': 'lon', 'YCorrected': 'lat'})  
-Gl_stations['Q50']= float('NaN')
-Gl_stations['Q80']= float('NaN')
-Gl_stations['Q90']= float('NaN')
-Gl_stations =Gl_stations[['Country','station','location','lon', 'lat','Q50','Q80','Q90']]
+Gl_stations = pd.read_csv(my_local_path + '/africa/glofas/Glofaspoints_Africa_510.csv')  # do not change
+Gl_stations = Gl_stations[Gl_stations['CountryNam']== country]
+Gl_stations['station'] = Gl_stations['ID']
+Gl_stations = Gl_stations[['ID','station', 'Stationnam', 'CountryNam','XCorrected','YCorrected']].set_index('ID').rename(columns={'Stationnam': 'location', 'CountryNam': 'Country','XCorrected': 'lon', 'YCorrected': 'lat'})
+Gl_stations['Q50'] = float('NaN')
+Gl_stations['Q80'] = float('NaN')
+Gl_stations['Q90'] = float('NaN')
+Gl_stations = Gl_stations[['Country', 'station', 'location', 'lon', 'lat', 'Q50', 'Q80', 'Q90']]
 
-# Read the path to the glofas grid Netcdf file of the country
+# Read the glofas grid Netcdf file of the country
+# if not found, download
 glofas_grid = path +'input/Glofas/%s_glofas_all.nc' %ct_code
-nc= xr.open_dataset(glofas_grid)
+if not os.path.exists(glofas_grid):
+    print('GloFAS data not found, downloading it (this might take some time)')
+    nc = get_glofas_data(country=country.lower(),
+                         return_type='xarray',
+                         credentials_file='settings.cfg')
+    nc.to_netcdf(glofas_grid)
+    print('download complete, continuing')
+else:
+    nc = xr.open_dataset(glofas_grid)
 
 # Create empty dictionary of all dstation discharge and a dataframe
-di={}
-df_discharge=pd.DataFrame(columns=['station', 'time', 'dis','max_dt_3days'])
+di = {}
+df_discharge = pd.DataFrame(columns=['station', 'time', 'dis','max_dt_3days'])
 
 for station in np.unique(Gl_stations['station']):
     
@@ -103,17 +113,17 @@ for station in np.unique(Gl_stations['station']):
     
     Longitude = Gl_stations[Gl_stations['station']==station].lon
     Latitude = Gl_stations[Gl_stations['station']==station].lat
-    nc_loc=nc.sel(lon=Longitude,lat=Latitude, method='nearest').rename({'dis24':'dis'}) 
-    di[station]=nc_loc.dis
+    nc_loc = nc.sel(lon=Longitude,lat=Latitude, method='nearest').rename({'dis24':'dis'})
+    di[station] = nc_loc.dis
     #saving a .nc file per station if needed
     #nc_loc.to_netcdf(path + 'input/Glofas/stations_nc/%s_GlofasGrid_extraction_%s.nc' % ( ct_code, station))  
     
     # 2- Compute the yearly maximum discharge and associated quantiles per stations
     
     Extreme_dis = nc_loc.dis.groupby('time.year').max('time')
-    Gl_stations.loc[station, 'Q50'] =Extreme_dis.quantile(0.5).values
-    Gl_stations.loc[station, 'Q80'] =Extreme_dis.quantile(0.8).values
-    Gl_stations.loc[station, 'Q90'] =Extreme_dis.quantile(0.9).values
+    Gl_stations.loc[station, 'Q50'] = Extreme_dis.quantile(0.5).values
+    Gl_stations.loc[station, 'Q80'] = Extreme_dis.quantile(0.8).values
+    Gl_stations.loc[station, 'Q90'] = Extreme_dis.quantile(0.9).values
 
     # 3- Extract the daily  discharge time-series station data (and save in a .csv per stationif needed)
     
