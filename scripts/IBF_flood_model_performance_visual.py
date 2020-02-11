@@ -59,7 +59,7 @@ merged_perf= district.set_index(Admin_col).join(model_perf_best.set_index('distr
 # create a shapefile out of the uga_affected_area_stations.csv file:
 
 AffArea_station =district.set_index(Admin_col).join(df_dg)
-AffArea_station.to_file(path + 'output/Performance_scores/AffDistrict_%s_v111.shp' %ct_code)
+AffArea_station.to_file(path + 'output/Performance_scores/AffDistrict_%s_v111.shp' %ct_code, index=True)
 
 
 #%%  create a figure with the number of flood event recorded per district
