@@ -194,14 +194,14 @@ for districts in Affected_admin: # for each district
 #%% PLOTS to ZOOM TO SPECIFIC STATION AND TIMEFRAME
 # manual QC of specific station and date : change date and station below
 
-startYear, startMonth,startDay = (2002,1,23)
-endYear, endMonth,endDay = (2012,12,10)
+startYear, startMonth,startDay = (2007,1,23)
+endYear, endMonth,endDay = (2019,12,10)
 
 startDate = dt.datetime(year=startYear, month=startMonth, day=startDay)
 endDate = dt.datetime(year=endYear, month=endMonth, day=endDay)
 
-station = 'G5197'   #to change
-districts = 'isiolo'
+station = 'G5208'   #to change
+districts = 'wajir'
 
 fe_district=flood_events[flood_events['district']==districts].reset_index()
 dis_sel= di[station].sel(time=slice(startDate,endDate)) 
