@@ -16,8 +16,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 #%% Cell to change per country
     
-country = 'Uganda'  
-ct_code='uga'
+country = 'Kenya'  
+ct_code='ken'
 
 #Path name to the folder : 
 path = my_local_path + '/' + country + '/'
@@ -25,12 +25,12 @@ path = my_local_path + '/' + country + '/'
 # Read the path to the relevant admin level shape to use for the study
 
 #for Uganda activate the following lines :
-Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'   # for Uganda
-Admin_col = 'ADM1_EN'  # column name of the Admin name in the shapefile of Uganda
+#Admin= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'   # for Uganda
+#Admin_col = 'ADM1_EN'  # column name of the Admin name in the shapefile of Uganda
 
 #for Kenya activate the following lines :
-#Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # for Kenya
-#Admin_col = 'name'  # column name of the Admin name in the shapefile for Kenya
+Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # for Kenya
+Admin_col = 'name'  # column name of the Admin name in the shapefile for Kenya
 
 #for Mali activate the following lines :
 #Admin= path + 'input/Admin/mli_admbnda_adm2_1m_dnct_20190802.shp' # for Mali
@@ -55,7 +55,6 @@ district[Admin_col]= district[Admin_col].str.replace(u"é", "e").str.lower()
 model_perf_best['district']= model_perf_best['district'].str.lower()
 
 merged_perf= district.set_index(Admin_col).join(model_perf_best.set_index('district')) 
-merged_perf.to_file(path + 'output/Performance_scores/perf_%s_v111.shp' %ct_code)
 
 # create a shapefile out of the uga_affected_area_stations.csv file:
 
@@ -70,10 +69,10 @@ cax = divider.append_axes("right", size="5%", pad=0.2)
 
 merged_perf.plot(ax=ax, color='lightgrey', edgecolor='grey')
 ax.set_title('Number of recorded flood event per district', fontsize= 14)
-cmap = cm.get_cmap('jet', 50)    # adapt the number if needed
+cmap = cm.get_cmap('jet', 60)    # adapt the number if needed
 
 perfdrop= merged_perf.dropna(subset=['nb_event'])
-perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=50, cmap=cmap, cax=cax)    # adapt the vmax number if needed
+perfdrop.plot(ax=ax,column='nb_event', legend= True,vmin=1,vmax=60, cmap=cmap, cax=cax)    # adapt the vmax number if needed
 
 fig.savefig(path+'output/Performance_scores/Nb_event_district.png')
 
@@ -100,11 +99,11 @@ for quantile in quantiles:
     merged_perf.plot(ax=ax1, color='lightgrey', edgecolor='grey')
     perf_quantile.plot(ax=ax1,column='far', legend= True, cmap='coolwarm', cax=cax1)
     
-    ax2.set_title('Proability of Detection (POD)', fontsize= 16)
+    ax2.set_title('Probability of Detection (POD)', fontsize= 16)
     merged_perf.plot(ax=ax2, color='lightgrey', edgecolor='grey')
     perf_quantile.plot(ax=ax2,column='pod', legend= True, cmap='coolwarm_r', cax=cax2)
     
-    ax3.set_title('Proability of False Detection (POFD)', fontsize= 16)
+    ax3.set_title('Probability of False Detection (POFD)', fontsize= 16)
     merged_perf.plot(ax=ax3, color='lightgrey', edgecolor='grey')
     perf_quantile.plot(ax=ax3,column='pofd', legend= True, cmap='coolwarm', cax=cax3)
     

@@ -153,13 +153,12 @@ df_dg_long = df_dg[['name', 'Glofas_st', 'Glofas_st2', 'Glofas_st3', 'Glofas_st4
 df_dg_long = df_dg_long.rename(columns = {'name': 'district'})
 df_dg=df_dg.set_index('name')
 
-
 #%% create a plot per district, only for the district having recorded impacts,  and for the related station per district
 #Time-series are normalized !
 
 Affected_admin=np.unique(flood_events['district'].values)  
 
-for districts in Affected_admin: # for each district of Uganda
+for districts in Affected_admin: # for each district 
     print('############')
     print(districts)
     fe_district=flood_events[flood_events['district']==districts]
@@ -186,7 +185,7 @@ for districts in Affected_admin: # for each district of Uganda
             if row==1:
                 ax1.axvline(x=index, color='y', linestyle='--')  
                     
-        ax1.set_title( '(Glofas Test for Admin =%s'%districts,fontsize=20,bbox=dict(facecolor='red', alpha=0.5))
+        ax1.set_title( 'Glofas Test for Admin =%s'%districts,fontsize=20,bbox=dict(facecolor='red', alpha=0.5))
         fig.savefig(path+ 'output/Glofas_Analysis/flow_impact_%s.png' %districts)
         plt.clf()
     

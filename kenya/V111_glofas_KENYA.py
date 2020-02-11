@@ -63,6 +63,7 @@ def calc_performance_scores(obs, pred):
      
      
 #%% Cell to change per country
+# don't forget to run your setting with lik to my_local_path
     
 country = 'Kenya'  
 ct_code='ken'
@@ -73,7 +74,7 @@ path = my_local_path + '/' + country + '/'
 # Read the path to the relevant admin level shape to use for the study
 Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp'
 
-#%% GlLOFAS DATA EXTRACTION AND ANALYSIS
+#%% GLOFAS DATA EXTRACTION AND ANALYSIS
 
 # Find the Glofas Stations in the Country 
 #  extract discharge time series for each station from the Glofas Grid data 
@@ -141,7 +142,8 @@ Date_format = '%d/%m/%Y'
 Admin_column = 'County'                      
 
 flood_events=pd.read_csv(path + 'input/%s_impact_data.csv' %ct_code, encoding='latin-1')  
-flood_events['Date']= pd.to_datetime(flood_events['Date'], format=Date_format)                                                               
+flood_events['Date']= pd.to_datetime(flood_events['Date'], format=Date_format) 
+flood_events= flood_events.query("Date >= '2000-01-01' ")                                                              
 flood_events = flood_events[['Date', Admin_column, 'flood']].drop_duplicates().rename(columns={Admin_column: 'district'}).dropna().set_index('Date')  
 flood_events['district']= flood_events['district'].str.lower() 
 
@@ -213,6 +215,7 @@ for impacts_date in fe_district['Date']:
     if startDate <= impacts_date <= endDate :
         plt.axvline(x=impacts_date, color='y', linestyle='--')
 
+plt.title('District : %s / Station : %s' % (districts, station))
   
 #%%  Joining together tables and extracting discharge data to create a prediction model table (df_model)
 
@@ -220,8 +223,9 @@ impact_floods = flood_events.reset_index().rename(columns={'Date': 'time'})
     
 df_model = pd.merge(df_discharge, df_dg_long, how='left', on='station').dropna()
 df_model = pd.merge(df_model, impact_floods , how='left', on=['time', 'district'])
-df_model = pd.merge(df_model, Gl_stations[['station','Q50', 'Q80','Q90']] , how='left', on='station')#.set_index('time')
-df_model = df_model[df_model['time']> impact_floods.time.min()]    #filtering the df to date after the first observed event
+df_model = pd.merge(df_model, Gl_stations[['station','Q50', 'Q80','Q90']] , how='left', on='station')
+df_model = df_model[df_model['time']> (impact_floods.time.min() - dt.timedelta(days=7))]    #filtering the df to date after the first observed event
+df_model = df_model[df_model['time']< (impact_floods.time.max() + dt.timedelta(days=7))]    #filtering the df to date before the last observed event
 
 df_model['flood'] = df_model['flood'].fillna(0)
 
@@ -229,7 +233,7 @@ df_model['Q50_pred']=np.where((df_model['max_dt_3days'] >= df_model['Q50']), 1, 
 df_model['Q80_pred']=np.where((df_model['max_dt_3days'] >= df_model['Q80']), 1, 0)
 df_model['Q90_pred']=np.where((df_model['max_dt_3days'] >= df_model['Q90']), 1, 0)
 
-df_model.to_csv(path + 'output/Glofas_Analysis/%s_glofas_matrix.csv'%ct_code, index=False)
+df_model.to_csv(path + 'output/Glofas_Analysis/%s_glofas_matrix.csv' %ct_code, index=False)
 #df_model.query('Q98_pred == 1')    #Tool to do a query in the df_model
 
 
@@ -248,7 +252,7 @@ performance_scores = pd.merge(floods_per_district, performance_scores, how='left
 performance_scores = performance_scores.rename(columns={ 'flood': 'nb_event'})
 performance_scores = performance_scores[['district','station','nb_event','quantile', 'pod','far','pofd','csi']]
 
-performance_scores.to_csv(path+ 'output/Performance_scores/%s_glofas_performance_score.csv'%ct_code, index=False)
+performance_scores.to_csv(path+ 'output/Performance_scores/%s_glofas_performance_score.csv' %ct_code, index=False)
 
 
 
