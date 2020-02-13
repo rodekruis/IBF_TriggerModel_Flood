@@ -1,12 +1,12 @@
 # IBF_TriggerModel_Flood V1.1
 
-Latest version of Trigger Model methodology for floods, using global datasets. The objetive is to assess the predictability of historical floods impact (YES/NO)  recorded per district in a country, using global datasets.
+Initial version of Trigger Model methodology for floods, using global datasets. The objetive is to assess the predictability of historical floods impact (YES/NO)  recorded per district in a country, using global datasets.
 
 VERSION V1.1.1 : Using only global discharge input data (Glofas) and testing a set of fixed discharged thresholds per glofas virtual stations.
 
 VERSION V1.1.2 :  Using only global discharge input data (Glofas) but with simple decision tree to test which threshold migh be better to use.
 
-On the folder /scripts, two python scripts need to be run :  
+## On the folder /scripts, two python scripts need to be run :  
 
 V111_glofas_analysis.py :  
 
