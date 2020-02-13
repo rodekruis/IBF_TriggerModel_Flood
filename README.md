@@ -16,7 +16,7 @@ VERSION V1.1.2 :  Using only global discharge input data (Glofas) but with simpl
 
 - plot the historical glofas discharge per district for the selected relevant stations per district  
 
-- compute the performance of the model per district for the 3 specific Quantile (Q50, Q80, Q90 and save all results in a .CSV  
+- compute the performance of the model per district for the 3 specific Quantile (Q50, Q80, Q90) and save all results in a .CSV  
 
 ### IBF_flood_model_performance_visual.py :
 A script to create maps of the performance or our model per district.This is plotting FAR, POD, POFD, CSI and the number of available events per district. This is also showing the coverage of our prediction model ! 
