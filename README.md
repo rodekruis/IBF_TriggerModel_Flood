@@ -20,3 +20,10 @@ VERSION V1.1.2 :  Using only global discharge input data (Glofas) but with simpl
 
 ### IBF_flood_model_performance_visual.py :
 A script to create maps of the performance or our model per district.This is plotting FAR, POD, POFD, CSI and the number of available events per district. This is also showing the coverage of our prediction model ! 
+
+## one folder per country :
+One folder is created per country, and contains two folders  
+
+### Input 
+
+### Ouput 
