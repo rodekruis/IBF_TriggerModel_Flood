@@ -97,19 +97,19 @@ for quantile in quantiles:
     
     ax1.set_title('False Alarm Ratio (FAR)', fontsize= 16)
     merged_perf.plot(ax=ax1, color='lightgrey', edgecolor='grey')
-    perf_quantile.plot(ax=ax1,column='far', legend= True, cmap='coolwarm', cax=cax1)
+    perf_quantile.plot(ax=ax1,column='far', legend= True, vmin=0,vmax=1, cmap='coolwarm', cax=cax1)
     
     ax2.set_title('Probability of Detection (POD)', fontsize= 16)
     merged_perf.plot(ax=ax2, color='lightgrey', edgecolor='grey')
-    perf_quantile.plot(ax=ax2,column='pod', legend= True, cmap='coolwarm_r', cax=cax2)
+    perf_quantile.plot(ax=ax2,column='pod', legend= True, vmin=0,vmax=1, cmap='coolwarm_r', cax=cax2)
     
     ax3.set_title('Probability of False Detection (POFD)', fontsize= 16)
     merged_perf.plot(ax=ax3, color='lightgrey', edgecolor='grey')
-    perf_quantile.plot(ax=ax3,column='pofd', legend= True, cmap='coolwarm', cax=cax3)
+    perf_quantile.plot(ax=ax3,column='pofd', legend= True, vmin=0,vmax=1, cmap='coolwarm', cax=cax3)
     
     ax4.set_title('Critical Success Index (CSI)', fontsize= 16)
     merged_perf.plot(ax=ax4, color='lightgrey', edgecolor='grey')
-    perf_quantile.plot(ax=ax4,column='pod', legend= True, cmap='coolwarm_r', cax=cax4)
+    perf_quantile.plot(ax=ax4,column='pod', legend= True, vmin=0,vmax=1, cmap='coolwarm_r', cax=cax4)
     
 
     fig.savefig(path + 'output/Performance_scores/%s_v111_%s.png' % (country, quantile))
