@@ -69,11 +69,12 @@ country = 'Uganda'
 ct_code = 'uga'
 
 # Path name to the folder and local path
-my_local_path = str(Path(os.getcwd()).parent)
+my_local_path = str(Path(os.getcwd()))
 path = my_local_path + '/' + country + '/'
 
 # Read the path to the relevant admin level shape to use for the study
-Admin = path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
+Admin = path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'     #activate for Uganda
+#Admin= path + 'input/Admin/KEN_adm1_mapshaper_corrected.shp' # activate for Kenya
 
 #%% GLOFAS DATA EXTRACTION AND ANALYSIS
 
@@ -149,7 +150,7 @@ df_discharge.to_csv(path + 'input/Glofas/station_csv/GLOFAS_fill_allstation.csv'
 # (1) - Open the flood impact data .csv file and create a dataframe
 #  !!!! Change the date format and the name of the Admin column in the script depending on the input of the country impact data .csv!! 
 Date_format = '%d/%m/%Y'
-Admin_column = 'Area'                      
+Admin_column = 'Area'    # 'Area' for Uganda / 'County' for  Kenya
 
 flood_events=pd.read_csv(path + 'input/%s_impact_data.csv' %ct_code, encoding='latin-1')  
 flood_events['Date']= pd.to_datetime(flood_events['Date'], format=Date_format)    
