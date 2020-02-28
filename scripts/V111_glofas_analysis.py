@@ -9,7 +9,8 @@ Created on Sun Oct 20 20:24:03 2019
 
 #%%
 # setting up your environment
-
+import sys
+sys.path.append("scripts")
 import xarray as xr
 import pandas as pd
 import matplotlib.pyplot as plt
