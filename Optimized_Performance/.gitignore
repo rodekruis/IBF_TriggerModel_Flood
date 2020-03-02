@@ -1,0 +1,4 @@
+*.vscode
+*settings.cfg
+*~
+*__pycache__
