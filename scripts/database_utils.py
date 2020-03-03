@@ -42,7 +42,7 @@ def get_glofas_data(country='uganda',
         return 0
 
     table = db.Table('glofas_'+country_lowercase, metadata, autoload=True, autoload_with=engine)
-    query = db.select([table]).where(table.columns.time.between(datetime.date(2000, 1, 1), datetime.date(2000, 12, 1)))
+    query = db.select([table]).where(table.columns.time.between(datetime.date(2000, 1, 1), datetime.date(2019, 12, 1)))
     df = pd.DataFrame(connection.execute(query))
 
     df = df.rename(columns={0: 'lat', 1: 'lon', 2: 'time', 3: 'dis24'})
