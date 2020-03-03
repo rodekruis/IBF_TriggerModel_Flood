@@ -93,10 +93,10 @@ def threshold_optimize(station,weight_far=0.5):
        df_dis['max_dt_3days']= df_dis.dis.rolling(7, min_periods=3,center=True).max() 
        
        df_model = pd.merge(df_dis, df_dg_long, how='left', on='station').dropna()
-       df_model = pd.merge(df_model, impact_floods, how='left', on=['time', 'district'])
+       df_model = pd.merge(df_model, flood_events, how='left', on=['time', 'district'])
        df_model['thres_discharge'] = discharge_threshold
-       df_model = df_model[df_model['time']> (impact_floods.time.min() - dt.timedelta(days=7))]
-       df_model = df_model[df_model['time']< (impact_floods.time.max() + dt.timedelta(days=7))]
+       df_model = df_model[df_model['time']> (flood_events.time.min() - dt.timedelta(days=7))]
+       df_model = df_model[df_model['time']< (flood_events.time.max() + dt.timedelta(days=7))]
        df_model['flood'] = df_model['flood'].fillna(0)
        
        df_model['predicted'] = np.where((df_model['max_dt_3days'] >= df_model['thres_discharge']), 1, 0)
@@ -150,13 +150,14 @@ Admin_column = 'Area'    # 'Area' for Uganda / 'County' for  Kenya
 flood_events=pd.read_csv(path + 'input/%s_impact_data.csv' %ct_code, encoding='latin-1')  
 flood_events['Date']= pd.to_datetime(flood_events['Date'], format=Date_format)    
 flood_events= flood_events.query("Date >= '2000-01-01' ")  
-flood_events = flood_events[['Date', Admin_column, 'flood']].drop_duplicates().rename(columns={Admin_column: 'district'}).dropna().set_index('Date')  
+flood_events = flood_events[['Date', Admin_column, 'flood']].drop_duplicates().rename(columns={Admin_column: 'district', 'Date': 'time'}).dropna()#.set_index('Date')  
 
 # possibility to filter on flood event certainty/impact severity column for Uganda instead of previous line 
 #flood_events = flood_events[['Date', Admin_column,'Certainty', 'Impact', 'flood']].drop_duplicates().rename(columns={Admin_column: 'district'}).dropna().set_index('Date')  
 #flood_events= flood_events[flood_events['Certainty'] > 6]
 
-flood_events['district']= flood_events['district'].str.lower() 
+flood_events['district']= flood_events['district'].str.lower()
+floods_per_district = flood_events.groupby('district')['flood'].count()
 
 # (2)- open the impacted_area and Glofas related stations per district files
 df_dg=pd.read_csv(path + 'input/%s_affected_area_stations.csv' %ct_code, encoding='latin-1') 
@@ -165,21 +166,14 @@ df_dg_long = df_dg[['name', 'Glofas_st', 'Glofas_st2', 'Glofas_st3', 'Glofas_st4
 df_dg_long = df_dg_long.rename(columns = {'name': 'district'})
 df_dg=df_dg.set_index('name')
 
-impact_floods = flood_events.reset_index().rename(columns={'Date': 'time'})  
-floods_per_district = impact_floods.groupby('district')['flood'].count()
 
 #%%
-
 # Create empty dictionary of all dstation discharge and a dataframe
 di = {}
-df_discharge = pd.DataFrame(columns=['station', 'time', 'dis','max_dt_3days'])
-
 performance_scores = pd.DataFrame(columns=['district', 'station', 'nb_event', 'pod','far','pofd','csi','threshold','objective_function'])
 
 for station in np.unique(Gl_stations['station']):
-    
-    # 1- For the selected glofas station, extract the glofas discharge from the glofas Grid  coordinate and save in a dictionary
-    
+
     Longitude = Gl_stations[Gl_stations['station']==station].lon
     Latitude = Gl_stations[Gl_stations['station']==station].lat
     nc_loc = nc.sel(lon=Longitude,lat=Latitude, method='nearest').rename({'dis24':'dis'})
@@ -192,7 +186,7 @@ performance_scores = tot_perf[['district', 'station', 'pod','far','pofd','csi','
 performance_scores = pd.merge(floods_per_district, performance_scores, how='left', on=['district'])  
 performance_scores = performance_scores.rename(columns={ 'flood': 'nb_event'})  
 
-performance_scores.to_csv(path+ 'output/Performance_scores/%s_glofas_performance_score_optimised.csv' %ct_code, index=False)
+performance_scores.to_csv(path+ 'output/Performance_scores/%s_glofas_performance_score_optimized.csv' %ct_code, index=False)
  
 
  
