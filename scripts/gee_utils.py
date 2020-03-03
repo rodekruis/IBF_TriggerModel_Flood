@@ -3,7 +3,7 @@ import pandas as pd
 from geetools import tools
 import time
 from tqdm import tqdm
-import math
+import os
 from calendar import monthrange
 import datetime
 
@@ -20,6 +20,11 @@ def get_gee_data(dataset='UCSB-CHG/CHIRPS/DAILY',
 
     # initialize GEE
     ee.Initialize()
+
+    if output_dir == '.':
+        output_dir = '../' + country.lower() + '/input/rainfall'
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
     # get shapefile of catchments, mapt it to a feature collection
     shapefile = 'users/jacopomargutti/catchment_'+country.lower()
