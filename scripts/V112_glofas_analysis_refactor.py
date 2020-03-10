@@ -216,9 +216,9 @@ def main(country='Uganda',
     # get impact data
     # NB Change date format and the name of the admin column depending on the input of the country impact data .csv!!
     date_format = '%d/%m/%Y'
-    if country == 'Uganda':
+    if country.lower() == 'uganda':
         admin_column = 'Area'
-    elif country == 'Kenya':
+    elif country.lower() == 'kenya':
         admin_column = 'County'
     impact_floods = get_impact_data(date_format, admin_column, ct_code, path)
 
@@ -252,6 +252,7 @@ def main(country='Uganda',
 
     print('median performance:')
     print(performance[['pod', 'far', 'pofd', 'csi']].median())
+
 
 if __name__ == "__main__":
     main()

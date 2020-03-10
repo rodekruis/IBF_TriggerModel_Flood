@@ -39,11 +39,12 @@ def get_gee_data(dataset='UCSB-CHG/CHIRPS/DAILY',
                          min_year=year_start, max_year=year_end,
                          min_month=1, max_month=12,
                          reducer_time=ee.Reducer.mean(),
-                         reducer_space=ee.Reducer.mean())
+                         reducer_space=[ee.Reducer.mean(), ee.Reducer.max()])
 
     # Turn feature collection dict to a single dataframe
     df_collection = fcdict_to_df(year_start, fc)
-    df_collection.to_csv(output_dir + "/" + name + "_data.csv", sep=',', index=False)
+    df_collection = df_collection.groupby(['AREA', 'Day', 'District', 'Month', 'PCODE', 'Year']).first()
+    df_collection.to_csv(output_dir + "/" + name + "_data.csv", sep=',')
     print('finish collecting', dataset)
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -52,7 +53,7 @@ def extract_data_EE(im_col, fe_col,
                     min_year, max_year,
                     min_month, max_month,
                     reducer_time, reducer_space,
-                    scale=1000, export=False):
+                    export=False):
     """
     Function that can extract and spatially reduce
     the data from Google Earth Engine.
@@ -91,20 +92,21 @@ def extract_data_EE(im_col, fe_col,
 
                 reduceImageCol = imageCol.reduce(reducer_time)
 
-                # aggregate over admin level according to reducer_space
-                imageCol_spatial_reduction = reduceImageCol.reduceRegions(collection=fe_col,
-                                                                          reducer=reducer_space,
-                                                                          scale=image_scale)
-
                 def newCol(feature):
                     feature = feature.set('Year', yNum)
                     feature = feature.set('Month', mNum)
                     feature = feature.set('Day', dNum)
                     return (feature)
 
-                # add a new column for year to each feature in the feature collection
-                polyOut = imageCol_spatial_reduction.map(newCol)
-                day_data.append(polyOut)
+                # aggregate over admin level according to reducer_space
+                for reducer in reducer_space:
+                    imageCol_spatial_reduction = reduceImageCol.reduceRegions(collection=fe_col,
+                                                                              reducer=reducer,
+                                                                              scale=image_scale)
+
+                    # add a new column for year to each feature in the feature collection
+                    polyOut = imageCol_spatial_reduction.map(newCol)
+                    day_data.append(polyOut)
 
             month_data.append(day_data)
 
@@ -132,7 +134,7 @@ def fc_to_df(year_data):
     data_list = []
 
     # for every (month) feature collection in the year feature collection:
-    for data in tqdm(year_data):
+    for data in year_data:
 
         # since 2018-12 is an empty feature collection at this moment this doesn't exist as so catch this error
         # this might nog be the prettiest solution.
@@ -169,7 +171,7 @@ def fcdict_to_df(start_year, fe_col):
     print('start processing data (this might take a while)')
 
     # for every datapoint in fe_col (feature collection for all years, all months):
-    for data in fe_col:
+    for data in tqdm(fe_col):
 
         # convert to dataframe:
         data = fc_to_df(data)
@@ -192,3 +194,7 @@ def fcdict_to_df(start_year, fe_col):
         df_result = pd.DataFrame()
 
     return (df_result)
+
+
+if __name__ == "__main__":
+    get_gee_data()
