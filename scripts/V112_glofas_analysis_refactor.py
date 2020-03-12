@@ -183,6 +183,7 @@ def main(country='Uganda',
     # Path name to the folder and local path
     my_local_path = str(Path(os.getcwd()))
     path = my_local_path + '/' + country + '/'
+    print(path)
 
     # Set path to admin level shape to use for the study
     Admin = path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp'     #activate for Uganda
@@ -204,7 +205,7 @@ def main(country='Uganda',
         print('GloFAS data not found, downloading it (this might take some time)')
         nc = get_glofas_data(country=country.lower(),
                              return_type='xarray',
-                             credentials_file='settings.cfg')
+                             credentials_file='scripts/settings.cfg')
         nc.to_netcdf(glofas_grid)
         print('download complete, continuing')
     else:
@@ -255,7 +256,8 @@ def main(country='Uganda',
 
 
 if __name__ == "__main__":
-    main()
+    import plac
+    plac.call(main)
 
 
 
