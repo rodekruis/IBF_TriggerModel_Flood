@@ -2,7 +2,7 @@
 
 Initial version of Trigger Model methodology for floods, using global datasets. The objetive is to assess the predictability of historical floods impact (YES/NO)  recorded per district in a country, using global datasets.
 
-VERSION V1.2 :  Uses river discharge data (from Glofas) and rainfall data (CHIRPS).
+VERSION V1.2 :  Uses river discharge data (source: Glofas) and rainfall data (source: CHIRPS).
 
 ## Directory Structure
 -   `scripts` model and visualization scripts
