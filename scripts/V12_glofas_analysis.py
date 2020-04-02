@@ -234,10 +234,10 @@ def train_test_model(df_model,
 
 def main(country='Uganda',
          ct_code='uga',
-         model='rainfall',
+         model='bdt_discharge_rainfall',
          loss='far'):
 
-    # Path name to the folder and local path
+    # Path name to t:wqhe folder and local path
     my_local_path = str(Path(os.getcwd()))
     path = my_local_path + '/' + country + '/'
 
@@ -337,7 +337,8 @@ def main(country='Uganda',
 
 
 if __name__ == "__main__":
-    main()
+    import plac
+    plac.call(main)
 
 
 
