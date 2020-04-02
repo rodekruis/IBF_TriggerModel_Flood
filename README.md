@@ -1,4 +1,4 @@
-# IBF_TriggerModel_Flood V1.1
+# IBF_TriggerModel_Flood V1.2
 
 Initial version of Trigger Model methodology for floods, using global datasets. The objetive is to assess the predictability of historical floods impact (YES/NO)  recorded per district in a country, using global datasets.
 
@@ -6,24 +6,64 @@ VERSION V1.1.1 : Using only global discharge input data (Glofas) and testing a s
 
 VERSION V1.1.2 :  Using only global discharge input data (Glofas) but with simple decision tree to test which threshold migh be better to use.
 
-## On the folder /scripts, two python scripts need to be run :  
+## Directory Structure
+-   `scripts` model and visualization scripts
+-   `africa` global input data for all Africa
+-   `uganda`, `kenya`... input and output data per country
 
-### V111_glofas_analysis.py :  
+## Setup
 
-- extract Glofas virtual stations  
+#### Requirements:
+-   [Python 3.7.4](https://www.python.org/downloads/)
 
-- compute 3 discharge thresholds based on glofas discharge quantiles Q50, Q80 and Q90 for each station. These quantiles correspond respectively to return periods of 2, 10 and 20 years. These quantiles are calculated based on yearly extreme event analysis.  
+to install necessary modules, execute
+```bash
+pip install -r requirements.txt
+```
+and install the [Google Earth Engine python API](https://developers.google.com/earth-engine/python_install-conda)
 
-- plot the historical glofas discharge per district for the selected relevant stations per district  
+## Model
 
-- compute the performance of the model per district for the 3 specific Quantile (Q50, Q80, Q90) and save all results in a .CSV  
+### What does it do?
 
-### IBF_flood_model_performance_visual.py :
-A script to create maps of the performance or our model per district.This is plotting FAR, POD, POFD, CSI and the number of available events per district. This is also showing the coverage of our prediction model ! 
+1. extract discharge data from Glofas
 
-## one folder per country :
-One folder is created per country, and contains two folders  
+1. extract CHIRPS rainfall data from Google Earth Engine
 
-### Input 
+1. train and test a model to predict floods
 
-### Ouput 
+1. save model performance in a .CSV 
+
+### How do I execute it?
+
+to run the model, execute
+```
+python scripts/V12_glofas_analysis.py
+```
+`V12_glofas_analysis.py` accepts the command line arguments described below,
+
+```
+usage: V12_glofas_analysis.py [-h] [country] [ct_code] [model] [loss]
+
+positional arguments:
+  country     [Uganda]
+  ct_code     [uga]
+  model       [bdt_discharge_rainfall]
+  loss        [far]
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+### Which models are implemented?
+- `quantile_discharge` based on thresholds with quantiles, using only glofas discharge data (best GloFAS station and threshold is computed per district)
+- `bdt_discharge` based on decision trees, using only glofas discharge data
+- `bdt_discharge_rainfall` based on decision trees, using glofas discharge data and rainfall
+
+## Visualization
+
+### How do I visualize model performance?
+to visualize performance, execute 
+```
+python scripts/IBF_flood_model_performance_visual.py
+```
+this will create maps of the performance or the model per district, by plotting FAR, POD, POFD, CSI and the number of available events per district. 
