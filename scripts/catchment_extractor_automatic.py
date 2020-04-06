@@ -2,13 +2,8 @@
 """
 Created on Wed Nov 20 10:54:39 2019
 
-@author: ATeklesadik
-"""
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 20 10:54:39 2019
+@author: ATeklesadik, ABucherie, PPhung
 
-@author: ATeklesadik
 """
 
 from pathlib import Path
@@ -33,18 +28,18 @@ country = 'Uganda'
 
 #choose with hydroshd basin order to work with ( recommended level 12)
 Hydroshed_order = '12'
-hydroshed_basin= 'C:/QGIS/Africa/Hydroshed/hybas_lake_af_lev%s_v1c/hybas_lake_af_lev%s_v1c.shp' % (Hydroshed_order, Hydroshed_order)
+hydroshed_basin= Mypath + 'Africa/Hydroshed/hybas_lake_af_lev%s_v1c/hybas_lake_af_lev%s_v1c.shp' % (Hydroshed_order, Hydroshed_order)
 
 # Path to the administrtative level file of the country we want to extract the catchment from
 
-Admin_path= 'C:/CODE_510/IBF_TriggerModel_Flood/uganda/input/Admin/uga_admbnda_adm1_UBOS_v2.shp'
+Admin_path= Mypath + '%s/input/Admin/uga_admbnda_adm1_UBOS_v2.shp' %country
 
 #Name of the Pcode and Admin name columns of interest in the admin shapefile we are using
 Pcode= 'ADM1_PCODE'
 Adm_name = 'ADM1_EN'
 
 #Path to folder where to save the catchment shapefiles
-Path_output = 'C:/CODE_510/statistical_floodimpact_uganda-Ghitub/output/uganda/Catchment_area_per_district/'
+Path_output = Mypath + '%s/Catchment_area_per_district/' %country
  
  #%% ################################# run the code for one sample admin 
 
