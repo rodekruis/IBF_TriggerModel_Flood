@@ -32,7 +32,7 @@ path = my_local_path + '/' + country + '/'
 
 #choose with hydroshd basin order to work with ( recommended level 12)
 Hydroshed_order = '12'
-hydroshed_basin= my_local_path + '/Africa/Hydroshed/hybas_lake_af_lev%s_v1c/hybas_lake_af_lev%s_v1c.shp' % (Hydroshed_order, Hydroshed_order)
+hydroshed_basin= my_local_path + '/Africa/Hydroshed/hybas_lake_af_lev%s_v1c.shp' % (Hydroshed_order)
 
 # Path to the administrtative level file of the country we want to extract the catchment from
 Admin_path= path + 'input/Admin/uga_admbnda_adm1_UBOS_v2.shp' 
