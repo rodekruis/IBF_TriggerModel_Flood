@@ -6,7 +6,7 @@ VERSION V1.2 :  Uses river discharge data (source: Glofas) and rainfall data (so
 
 ## Directory Structure
 -   `scripts` model and visualization scripts
--   `africa` global input data for all Africa
+-   `africa` global input data for all Africa (Glofas virtual station, Hydroshed ...)
 -   `uganda`, `kenya`... input and output data per country
 
 ## Setup
