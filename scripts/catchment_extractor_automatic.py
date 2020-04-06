@@ -42,7 +42,7 @@ Pcode= 'ADM1_PCODE'
 Adm_name = 'ADM1_EN'
 
 #Path to folder where to save the catchment shapefiles
-Path_output = path + 'Catchment_area_per_district/' 
+Path_output = path + 'input/Catchment_area_per_district/' 
  
  #%% ################################# run the code for one sample admin 
 
