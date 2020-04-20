@@ -80,8 +80,9 @@ def prepare_dataframe_stations_discharge(GloFAS_stations, GloFAS_data, path):
 
 def prepare_rainfall_data(df, n_timesteps=10):
 
+    df[['Year', 'Month', 'Day']] = df[['Year', 'Month', 'Day']].astype(int)
     df['time'] = pd.to_datetime((df.Year*10000+df.Month*100+df.Day).apply(str), format='%Y-%m-%d')
-    df = df.drop(columns=['Year', 'Month', 'Day', 'AREA', 'PCODE'])
+    df = df.drop(columns=['Year', 'Month', 'Day', 'PCODE'])
     df = df.rename(columns={'District': 'district'})
     df.district = df.district.str.lower()
     df = df.groupby(['district', 'time']).first()
@@ -294,21 +295,21 @@ def main(country='Uganda',
             df_rainfall = pd.read_csv(rainfall_processed_data_path)
             df_rainfall.time = pd.to_datetime(df_rainfall.time)
         else:
-            rainfall_raw_data_path = path + 'input/rainfall/CHIRPS_data.csv'
+            rainfall_raw_data_path = path + 'input/rainfall/CHIRPS_data_raw.csv'
             if not os.path.exists(rainfall_raw_data_path):
-                from gee_utils import get_gee_data
+                from CHIRPS_utils import get_CHIRPS_data
                 print('CHIRPS rainfall data not found, downloading it (this might take some time)')
-                get_gee_data(dataset='UCSB-CHG/CHIRPS/DAILY',
-                             name='CHIRPS',
-                             country=country,
-                             year_start=2000,
-                             year_end=2019,
-                             output_dir=path + 'input/rainfall')
+                get_CHIRPS_data(country=country,
+                                catchment_shapefile=path+'input/catchment/'+ct_code+'_catchment_districts.shp',
+                                year_start=2000,
+                                year_end=2019,
+                                output_dir=path+'input/rainfall')
                 print('download complete, continuing')
             df_rainfall = pd.read_csv(rainfall_raw_data_path)
             print('processing CHIRPS rainfall data (this might take some time)')
             df_rainfall = prepare_rainfall_data(df_rainfall, n_timesteps=8)
             df_rainfall.to_csv(rainfall_processed_data_path)
+            print('processing complete, continuing')
 
     # join together tables and extract discharge data to create a prediction model table (df_model)
     df_model = pd.merge(df_discharge, df_dg_long, how='left', on='station').dropna()
@@ -321,6 +322,7 @@ def main(country='Uganda',
     df_model['flood'] = df_model['flood'].fillna(0)
 
     # train & test model, compute performance
+    print('starting model training & testing')
     performance = train_test_model(df_model,
                                    predictor='max_dt_3days',
                                    model_type='bdt_discharge_rainfall',

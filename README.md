@@ -18,8 +18,6 @@ to install necessary modules, execute
 ```bash
 pip install -r requirements.txt
 ```
-and install the [Google Earth Engine python API](https://developers.google.com/earth-engine/python_install-conda)
-
 ## Model
 
 ### What does it do?
